@@ -27,6 +27,93 @@
     justify-content: center;
     padding: 24px 16px;
   }
+		  
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+    pointer-events: none;
+    z-index: 100;
+  }
+h1 {
+	font-size: clamp(48px, 10vw, 96px);
+    font-weight: 700;
+    font-family: monospace;
+    letter-spacing: 0.08em;
+    background: linear-gradient(135deg, #ff3c3c, #ff9500, #ffe600, #00e5ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 36px;
+  }
+
+  .pad-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .pad {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.07s, border-color 0.07s, box-shadow 0.07s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .pad::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--pad-color);
+    opacity: 0;
+    transition: opacity 0.06s;
+  }
+
+  .pad.active::before { opacity: 0.22; }
+  .pad.active {
+    transform: scale(0.92);
+    border-color: var(--pad-color);
+    box-shadow: 0 0 18px var(--pad-color);
+  }
+
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--pad-color);
+    opacity: 0.5;
+    transform: scale(0);
+    animation: ripple 0.5s ease-out forwards;
+    pointer-events: none;
+  }
+  @keyframes ripple {
+    to { transform: scale(5); opacity: 0; }
+  }
+
+  .pad-label {
+    font-size: 18px;
+    font-weight: 700;
+    font-family: monospace;
+    letter-spacing: 0.05em;
+    color: var(--pad-color);
+    position: relative;
+    z-index: 1;
+  }
+
 	  </style>
   </head>
 </html>
