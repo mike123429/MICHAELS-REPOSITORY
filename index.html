@@ -72,6 +72,10 @@ input[type=range]{
   { name: 'HH OP', key: 'D', color: '#ff6ec7' },
   { name: 'RIDE',  key: 'F', color: '#ffa0a0' },
 ]; 
+
+const vol = new Tone.Volume(-3).toDestination();
+let synths = [];
+let started = false;
 </script>
 
 </html>
