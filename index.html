@@ -22,17 +22,25 @@ h1 {
 	font-size: 80px;
 	margin-bottom: 30px;
 }
+
 #grid {
     display: grid;                          
     grid-template-columns: repeat(4, 140px);
     gap: 12px;
   }
+
 .pad {
 	height: 60px;
 	background: #100;
 	border: 2px solid #330;
 	border-radius: 14 px;
-	cursor: url('bull.png') 
+	cursor: url('bull.png')
+	display: flex;
+	align-items: center;
+	font-size: 20px;
+	font-family: monospace;
+	color: inherit;
+	
 .pad:active {
 	transform: scale(0.92);
 }
