@@ -62,7 +62,10 @@ input[type=range]{
 <input type="range" id="volume" max="100" min="1" step="1">
 	
 <script>
-	const pads = [
+// ── PAD DATA ──────────────────────────────────────────────────
+// Each pad has a display name, a keyboard shortcut key, and a color.
+// The 8 pads are arranged in 2 rows of 4: Q W E R on top, A S D F on bottom.
+const pads = [
   { name: 'KICK',  key: 'Q', color: '#ff3c3c' }, // row 1
   { name: 'SNARE', key: 'W', color: '#ff9500' },
   { name: 'CLAP',  key: 'E', color: '#ffe600' },
@@ -71,11 +74,114 @@ input[type=range]{
   { name: 'HH CL', key: 'S', color: '#00ff88' },
   { name: 'HH OP', key: 'D', color: '#ff6ec7' },
   { name: 'RIDE',  key: 'F', color: '#ffa0a0' },
-]; 
+];
 
 const vol = new Tone.Volume(-3).toDestination();
+
 let synths = [];
 let started = false;
-</script>
 
+async function start() {
+  if (started) return; 
+  await Tone.start(); 
+  started = true;
+
+
+    new Tone.MembraneSynth({
+      pitchDecay: 0.08, octaves: 8,
+      envelope: { attack: 0.001, decay: 0.35, sustain: 0, release: 0.1 }
+    }).connect(vol),
+
+    new Tone.NoiseSynth({
+      noise: { type: 'white' },
+      envelope: { attack: 0.001, decay: 0.18, sustain: 0, release: 0.05 }
+    }).connect(vol),
+
+    new Tone.NoiseSynth({
+      noise: { type: 'pink' },
+      envelope: { attack: 0.005, decay: 0.12, sustain: 0, release: 0.05 }
+    }).connect(vol),
+
+    new Tone.MembraneSynth({
+      pitchDecay: 0.05, octaves: 4,
+      envelope: { attack: 0.001, decay: 0.22, sustain: 0, release: 0.05 }
+    }).connect(vol),
+
+    new Tone.MembraneSynth({
+      pitchDecay: 0.07, octaves: 5,
+      envelope: { attack: 0.001, decay: 0.3, sustain: 0, release: 0.08 }
+    }).connect(vol),
+
+    new Tone.MetalSynth({
+      frequency: 400, harmonicity: 5.1, modulationIndex: 32,
+      resonance: 4000, octaves: 1.5,
+      envelope: { attack: 0.001, decay: 0.05, release: 0.01 }
+    }).connect(vol),
+
+    new Tone.MetalSynth({
+      frequency: 400, harmonicity: 5.1, modulationIndex: 32,
+      resonance: 4000, octaves: 1.5,
+      envelope: { attack: 0.001, decay: 0.45, release: 0.1 }
+    }).connect(vol),
+
+    new Tone.MetalSynth({
+      frequency: 250, harmonicity: 8.1, modulationIndex: 16,
+      resonance: 5000, octaves: 1.2,
+      envelope: { attack: 0.001, decay: 0.8, release: 0.2 }
+    }).connect(vol),
+
+  ];
+}
+const notes = ['C1', null, null, 'G2', 'D2', null, null, null];
+
+function trigger(i) {
+  const s = synths[i];
+  if (!s) return; 
+  notes[i] ? s.triggerAttackRelease(notes[i], '8n') : s.triggerAttackRelease('8n');
+}
+
+const grid = document.getElementById('grid');
+const els = []; 
+
+pads.forEach((p, i) => {
+  const div = document.createElement('div');
+  div.className = 'pad';                      
+  div.textContent = p.name;                  
+  div.style.color = p.color;              
+  div.style.borderColor = '#333';             
+
+ 
+  div.addEventListener('pointerdown', async e => {
+    e.preventDefault();            
+    await start();                 
+    trigger(i);                   
+   
+    div.style.borderColor = p.color;
+    div.style.background = p.color + '33'; 
+
+    setTimeout(() => { div.style.borderColor = '#333'; div.style.background = '#111'; }, 200);
+  });
+
+  grid.appendChild(div);
+  els.push(div);          
+});
+
+const keys = {};
+pads.forEach((p, i) => keys[p.key] = i);
+
+document.addEventListener('keydown', async e => {
+  if (e.repeat) return; 
+  const i = keys[e.key.toUpperCase()]; 
+  if (i !== undefined) {
+    await start(); 
+    trigger(i);       
+    els[i].dispatchEvent(new Event('pointerdown'));
+  }
+});
+
+document.getElementById('vol').addEventListener('input', e => {
+  vol.volume.value = Tone.gainToDb(+e.target.value);
+});
+</script>
+</body>
 </html>
