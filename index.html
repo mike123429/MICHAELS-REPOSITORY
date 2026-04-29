@@ -43,11 +43,23 @@ h1 {
 .pad:active {
 	transform: scale(0.92);
 }
+	label {
+		margin-top: 15px;
+		font-size: 20px;
+		color: #555
+	}
+input[type=range]{
+	width: 160px;
+	margin-top: 16px;
+}
 </style>
 </head>
 </body>
 	
 <h1>MICHAELS 808 MACHINE</h1>
+<div>id="grid"></div>
+<label>VOL</label>
+<input type="range" id="volume" max="100" min="1" step="1">
 	
 <script>
 	
